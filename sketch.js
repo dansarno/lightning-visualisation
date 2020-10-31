@@ -6,5 +6,8 @@ function setup() {
 
 function draw() {
   background(200);
-  ellipse(50, 50, 5);
+  ellipse(50, 50, 10);
+  let grid = new Grid(10, 5, 400, 200);
+  console.log(grid);
+  noLoop();
 }
