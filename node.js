@@ -1,10 +1,10 @@
 class Grid {
-  constructor(cols, rows, w, h) {
+  constructor(cols, rows, w, h, probWall) {
     this.cols = cols;
     this.rows = rows;
     this.w = w;
     this.h = h;
-    this.nodeArr = this.make_regular_grid(0.3);
+    this.nodeArr = this.make_regular_grid(probWall);
     this.startNode = null;
     this.endNode = null;
     this.openSet = [];
@@ -26,12 +26,12 @@ class Grid {
           grid[i][j] = new Node(i * nodeWidth + nodeWidth / 2,
             j * nodeHeight + nodeHeight / 2,
             i, j,
-            nodeWidth, nodeHeight, 1);
+            nodeWidth, nodeHeight, true);
         } else { // Create regular node
           grid[i][j] = new Node(i * nodeWidth + nodeWidth / 2,
             j * nodeHeight + nodeHeight / 2,
             i, j,
-            nodeWidth, nodeHeight, 0);
+            nodeWidth, nodeHeight);
         }
       }
     }
@@ -42,17 +42,31 @@ class Grid {
     for (let i = 0; i < this.cols; i++) {
       for (let j = 0; j < this.rows; j++) {
         let node = this.nodeArr[i][j];
+        // E, W, S, N connections
         if (i < this.cols - 1) {
           node.neighbours.push(this.nodeArr[i + 1][j]);
         }
         if (i > 0) {
           node.neighbours.push(this.nodeArr[i - 1][j]);
         }
-        if (j < this.cols - 1) {
+        if (j < this.rows - 1) {
           node.neighbours.push(this.nodeArr[i][j + 1]);
         }
         if (j > 0) {
           node.neighbours.push(this.nodeArr[i][j - 1]);
+        }
+        // NW, connections
+        if (i > 0 && j > 0) {
+          node.neighbours.push(this.nodeArr[i - 1][j - 1]);
+        }
+        if (i < this.cols - 1 && j > 0) {
+          node.neighbours.push(this.nodeArr[i + 1][j - 1]);
+        }
+        if (i > 0 && j < this.rows - 1) {
+          node.neighbours.push(this.nodeArr[i - 1][j + 1]);
+        }
+        if (i < this.cols - 1 && j < this.rows - 1) {
+          node.neighbours.push(this.nodeArr[i + 1][j + 1]);
         }
       }
     }
@@ -78,20 +92,25 @@ class Grid {
   }
 
   renderPath() {
+    noFill();
+    stroke(0, 69, 255);
+    strokeWeight(5);
+    beginShape();
     for (let el of this.path) {
-      el.show(color(0, 69, 255));
+      vertex(el.x, el.y);
     }
+    endShape();
   }
 
   setStartNode(i, j) {
-    this.weight = 0;
     this.startNode = this.nodeArr[i][j];
     this.addToOpenSet(this.startNode);
+    this.startNode.wall = false;
   }
 
   setEndNode(i, j) {
-    this.weight = 0;
     this.endNode = this.nodeArr[i][j];
+    this.endNode.wall = false;
   }
 
   addToOpenSet(node) {
@@ -114,15 +133,8 @@ class Grid {
     this.removeFromOpenSet(node);
   }
 
-  calcHeuristic(node, type = "euclidian") {
-    if (type == "euclidian") {
-      return dist(node.i, node.j, this.endNode.i, this.endNode.j);
-    } else if (type == "manhattan") {
-      return abs(node.i - this.endNode.i) + abs(node.j - this.endNode.j);
-    } else {
-      console.log("Invalid heuristic type");
-      noLoop();
-    }
+  calcHeuristic(node) {
+    return dist(node.i, node.j, this.endNode.i, this.endNode.j);
   }
 
   tracePath(node) {
@@ -139,7 +151,6 @@ class Grid {
     if (this.openSet.length > 0) {
       // Continue
       let current = this.getBestNode();
-      this.tracePath(current);
       if (current === this.endNode) {
         console.log("DONE");
         noLoop();
@@ -152,14 +163,15 @@ class Grid {
           neighbour.g = tempG;
           neighbour.f = neighbour.g + neighbour.h;
           neighbour.cameFrom = current;
-          if (!this.openSet.includes(neighbour)) {
+          if (!this.openSet.includes(neighbour) && !neighbour.wall) {
             this.addToOpenSet(neighbour);
           }
         }
       }
+      this.tracePath(current);
     } else {
-      noLoop();
       // Stop
+      noLoop();
     }
   }
 
@@ -175,7 +187,7 @@ class Grid {
 }
 
 class Node {
-  constructor(x, y, i, j, width, height, weight = 0) {
+  constructor(x, y, i, j, width, height, wall = false) {
     this.x = x;
     this.y = y;
     this.i = i;
@@ -187,31 +199,31 @@ class Node {
     this.f = Infinity;
     this.g = Infinity;
     this.h = 0;
-    this.weight = weight;
+    this.wall = wall;
     this.isInOpen = false;
     this.isInClosed = false;
     this.isInPath = false;
   }
 
-  show(c = null) {
+  show() {
     noStroke();
-    rectMode(CENTER);
-    if (c) {
-      fill(c);
+    ellipseMode(CENTER);
+    if (!this.wall) {
+      fill(255);
+      ellipse(this.x, this.y, this.width, this.height);
     } else {
-      if (this.weight == 0) {
-        fill(255);
-      } else {
-        fill(1);
-      }
-
-      if (this.isInOpen) {
-        fill(145, 230, 147);
-      } else if (this.isInClosed) {
-        fill(237, 104, 104);
-      }
+      fill(0);
+      ellipse(this.x, this.y, this.width, this.height);
     }
-    rect(this.x, this.y, this.width, this.height);
+
+    rectMode(CENTER);
+    if (this.isInOpen) {
+      fill(145, 230, 147);
+      rect(this.x, this.y, this.width, this.height);
+    } else if (this.isInClosed) {
+      fill(237, 104, 104);
+      rect(this.x, this.y, this.width, this.height);
+    }
   }
 
 }

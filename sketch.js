@@ -1,12 +1,13 @@
 let grid;
-let cols = 25;
-let rows = 25;
+let cols = 50;
+let rows = 50;
 
 function setup() {
-  createCanvas(600, 600);
-  grid = new Grid(cols, rows, width, height);
-  grid.setStartNode(0, 0);
-  grid.setEndNode(cols - 1, rows - 1);
+  // frameRate(1);
+  createCanvas(800, 800);
+  grid = new Grid(cols, rows, width, height, 0.4);
+  grid.setStartNode(floor(random(0, cols)), 0);
+  grid.setEndNode(floor(random(0, cols)), rows - 1);
   grid.initialise();
 }
 
@@ -16,5 +17,4 @@ function draw() {
   console.log(grid);
   grid.aStarStep();
   grid.render();
-
 }
