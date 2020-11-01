@@ -5,7 +5,7 @@ function setup() {
 }
 
 function draw() {
-  background(255, 220, 180);
+  background(255);
   let grid = new Grid(50, 50, width, height);
   grid.render();
   console.log(grid);
