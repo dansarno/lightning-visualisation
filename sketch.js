@@ -1,13 +1,13 @@
 function setup() {
-  createCanvas(600, 400);
+  createCanvas(600, 600);
   noStroke();
   fill(20, 64, 190);
 }
 
 function draw() {
-  background(200);
-  ellipse(50, 50, 10);
-  let grid = new Grid(10, 5, 400, 200);
+  background(255, 220, 180);
+  let grid = new Grid(50, 50, width, height);
+  grid.render();
   console.log(grid);
   noLoop();
 }
