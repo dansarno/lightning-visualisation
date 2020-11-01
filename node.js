@@ -93,7 +93,16 @@ class Grid {
 
   renderPath() {
     noFill();
-    stroke(0, 69, 255);
+    stroke(255, 255, 0);
+    strokeWeight(8);
+    strokeJoin(ROUND);
+    strokeCap(PROJECT);
+    beginShape();
+    for (let el of this.path) {
+      vertex(el.x, el.y);
+    }
+    endShape();
+    stroke(255, 255, 255);
     strokeWeight(5);
     beginShape();
     for (let el of this.path) {
@@ -209,21 +218,21 @@ class Node {
     noStroke();
     ellipseMode(CENTER);
     if (!this.wall) {
-      fill(255);
+      fill(0);
       ellipse(this.x, this.y, this.width, this.height);
     } else {
       fill(0);
       ellipse(this.x, this.y, this.width, this.height);
     }
 
-    rectMode(CENTER);
-    if (this.isInOpen) {
-      fill(145, 230, 147);
-      rect(this.x, this.y, this.width, this.height);
-    } else if (this.isInClosed) {
-      fill(237, 104, 104);
-      rect(this.x, this.y, this.width, this.height);
-    }
+    // rectMode(CENTER);
+    // if (this.isInOpen) {
+    //   fill(145, 230, 147);
+    //   rect(this.x, this.y, this.width, this.height);
+    // } else if (this.isInClosed) {
+    //   fill(237, 104, 104);
+    //   rect(this.x, this.y, this.width, this.height);
+    // }
   }
 
 }
