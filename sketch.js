@@ -20,10 +20,20 @@ function setup() {
 }
 
 function draw() {
-  background(13, 13, 23);
+  backgroundGradient(color(13, 13, 23), color(255, 255, 255));
   grid.render(showHide);
   skyline.render();
   grid.aStarStep();
+}
+
+function backgroundGradient(c1, c2) {
+  noFill();
+  for (let y = 0; y < height; y++) {
+    let interp = map(y, 0, height, 0, 1);
+    let c = lerpColor(c1, c2, interp);
+    stroke(c);
+    line(0, y, width, y);
+  }
 }
 
 function flash() {

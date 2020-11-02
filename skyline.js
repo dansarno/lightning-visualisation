@@ -31,7 +31,7 @@ class Skyline {
 }
 
 class Building {
-  constructor(x0, envWidth, envHeight, colour = color(59, 59, 59)) {
+  constructor(x0, envWidth, envHeight, colour = color(31, 31, 31)) {
     this.x0 = x0;
     this.w = random(0.02, 0.1) * envWidth;
     this.h = random(0.2, 0.6) * envHeight;
@@ -47,10 +47,10 @@ class Building {
 }
 
 class Skyscraper extends Building {
-  constructor(x0, envWidth, envHeight, colour = color(59, 59, 59)) {
-    super(x0, envWidth, envHeight, colour = color(59, 59, 59));
+  constructor(x0, envWidth, envHeight, colour = color(31, 31, 31)) {
+    super(x0, envWidth, envHeight, colour = color(31, 31, 31));
     this.x0 -= this.w / 2;
-    this.h = 0.8 * envHeight;
+    this.h = 0.85 * envHeight;
   }
 
   show() {
@@ -58,6 +58,6 @@ class Skyscraper extends Building {
     noStroke();
     fill(this.colour);
     rectMode(CORNER);
-    rect(this.x0 + this.w / 2 - 5, 595, 10, 50);
+    rect(this.x0 + this.w / 2 - 5, 595, 7, 50);
   }
 }
