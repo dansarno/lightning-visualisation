@@ -218,10 +218,10 @@ class Node {
     noStroke();
     ellipseMode(CENTER);
     if (!this.wall) {
-      fill(0);
+      fill(13, 13, 23);
       ellipse(this.x, this.y, this.width, this.height);
     } else {
-      fill(0);
+      fill(13, 13, 23);
       ellipse(this.x, this.y, this.width, this.height);
     }
 
