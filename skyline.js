@@ -17,9 +17,9 @@ class Skyline {
   }
 
   addTallest(xPosition) {
-    let tallestBuilding = new Building(xPosition, this.w, this.h);
-    tallestBuilding.x0 -= tallestBuilding.w / 2;
-    tallestBuilding.h = this.h;
+    let tallestBuilding = new Skyscraper(xPosition, this.w, this.h);
+    // tallestBuilding.x0 -= tallestBuilding.w / 2;
+    // tallestBuilding.h = this.h;
     this.buildings.push(tallestBuilding);
   }
 
@@ -34,13 +34,30 @@ class Building {
   constructor(x0, envWidth, envHeight, colour = color(59, 59, 59)) {
     this.x0 = x0;
     this.w = random(0.02, 0.1) * envWidth;
-    this.h = random(0.2, 0.8) * envHeight;
+    this.h = random(0.2, 0.6) * envHeight;
     this.colour = colour;
   }
 
   show() {
     stroke(this.colour);
     fill(this.colour);
+    rectMode(CORNER);
     rect(this.x0, 800 - this.h, this.w, this.h);
+  }
+}
+
+class Skyscraper extends Building {
+  constructor(x0, envWidth, envHeight, colour = color(59, 59, 59)) {
+    super(x0, envWidth, envHeight, colour = color(59, 59, 59));
+    this.x0 -= this.w / 2;
+    this.h = 0.8 * envHeight;
+  }
+
+  show() {
+    super.show();
+    noStroke();
+    fill(this.colour);
+    rectMode(CORNER);
+    rect(this.x0 + this.w / 2 - 5, 595, 10, 50);
   }
 }

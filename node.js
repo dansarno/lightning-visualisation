@@ -78,15 +78,15 @@ class Grid {
     this.startNode.f = this.startNode.h;
   }
 
-  render() {
-    this.renderGrid();
+  render(showHide) {
+    this.renderGrid(showHide);
     this.renderPath();
   }
 
-  renderGrid() {
+  renderGrid(showHide) {
     for (let i = 0; i < this.cols; i++) {
       for (let j = 0; j < this.rows; j++) {
-        this.nodeArr[i][j].show();
+        this.nodeArr[i][j].show(showHide);
       }
     }
   }
@@ -94,7 +94,7 @@ class Grid {
   renderPath() {
     noFill();
     stroke(255, 255, 0);
-    strokeWeight(8);
+    strokeWeight(5);
     strokeJoin(ROUND);
     strokeCap(PROJECT);
     beginShape();
@@ -103,7 +103,7 @@ class Grid {
     }
     endShape();
     stroke(255, 255, 255);
-    strokeWeight(5);
+    strokeWeight(3);
     beginShape();
     for (let el of this.path) {
       vertex(el.x, el.y);
@@ -161,10 +161,11 @@ class Grid {
       // Continue
       let current = this.getBestNode();
       if (current === this.endNode) {
-        console.log("DONE");
-        noLoop();
+        // DONE!!!
+        flash();
+      } else {
+        this.addToClosedSet(current);
       }
-      this.addToClosedSet(current);
       for (let neighbour of current.neighbours) {
         let tempG = current.g + 1;
         if (tempG < neighbour.g) {
@@ -211,28 +212,33 @@ class Node {
     this.wall = wall;
     this.isInOpen = false;
     this.isInClosed = false;
-    this.isInPath = false;
   }
 
-  show() {
+  show(showHide) {
     noStroke();
-    ellipseMode(CENTER);
-    if (!this.wall) {
-      fill(13, 13, 23);
-      ellipse(this.x, this.y, this.width, this.height);
-    } else {
-      fill(13, 13, 23);
-      ellipse(this.x, this.y, this.width, this.height);
+    if (this.wall && showHide) {
+      fill(255);
+      circle(this.x, this.y, min(this.width, this.height));
     }
+    // else {
+    //   fill(13, 13, 23);
+    //   ellipse(this.x, this.y, this.width, this.height);
+    // }
 
     // rectMode(CENTER);
-    // if (this.isInOpen) {
-    //   fill(145, 230, 147);
-    //   rect(this.x, this.y, this.width, this.height);
-    // } else if (this.isInClosed) {
-    //   fill(237, 104, 104);
+    // if (this.isInOpen || this.isInClosed) {
+    //   fill(51, 52, 105);
     //   rect(this.x, this.y, this.width, this.height);
     // }
+
+    rectMode(CENTER);
+    if (this.isInOpen && showHide) {
+      fill(145, 230, 147);
+      rect(this.x, this.y, this.width, this.height);
+    } else if (this.isInClosed && showHide) {
+      fill(237, 104, 104);
+      rect(this.x, this.y, this.width, this.height);
+    }
   }
 
 }
