@@ -12,7 +12,7 @@ function setup() {
 
   grid = new Grid(cols, rows, width, 600, 0.4);
   grid.setStartNode(floor(random(0, cols)), 0);
-  grid.setEndNode(floor(random(0, cols)), rows - 1);
+  grid.setEndNode(floor(random(0 + (cols * 0.2), cols - (cols * 0.2))), rows - 1);
   grid.initialise();
 
   skyline = new Skyline(width, 200);
