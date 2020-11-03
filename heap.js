@@ -33,7 +33,7 @@ class MinHeap {
 
   heapifyUp() {
     let index = this.size - 1;
-    while (this.hasParent(index) && this.getParent(index) > this.items[index]) {
+    while (this.hasParent(index) && this.getParent(index)[1] > this.items[index][1]) {
       this.swap(this.getParentIndex(index), index);
       index = this.getParentIndex(index);
     }
@@ -43,10 +43,10 @@ class MinHeap {
     let index = 0;
     while (this.hasLeftChild(index)) {
       let smallerChildIndex = this.getLeftChildIndex(index);
-      if (this.hasRightChild(index) && this.getRightChild(index) < this.getLeftChild(index)) {
+      if (this.hasRightChild(index) && this.getRightChild(index)[1] < this.getLeftChild(index)[1]) {
         smallerChildIndex = this.getRightChildIndex(index);
       }
-      if (this.items[index] < this.items[smallerChildIndex]) {
+      if (this.items[index][1] < this.items[smallerChildIndex][1]) {
         break;
       } else {
         this.swap(index, smallerChildIndex);

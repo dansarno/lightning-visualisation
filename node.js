@@ -7,7 +7,7 @@ class Grid {
     this.nodeArr = this.make_regular_grid(probWall);
     this.startNode = null;
     this.endNode = null;
-    this.openSet = [];
+    this.openSet = new MinHeap();
     this.closedSet = [];
     this.path = [];
 
@@ -123,23 +123,24 @@ class Grid {
   }
 
   addToOpenSet(node) {
-    this.openSet.push(node);
+    // this.openSet.push(node);
+    this.openSet.add([node, node.f]);
     node.isInOpen = true;
   }
 
-  removeFromOpenSet(node) {
-    for (let i = this.openSet.length - 1; i >= 0; i--) {
-      if (this.openSet[i] == node) {
-        this.openSet.splice(i, 1);
-      }
-    }
-  }
+  // removeFromOpenSet(node) {
+  //   for (let i = this.openSet.length - 1; i >= 0; i--) {
+  //     if (this.openSet[i] == node) {
+  //       this.openSet.splice(i, 1);
+  //     }
+  //   }
+  // }
 
   addToClosedSet(node) {
     this.closedSet.push(node);
     node.isInOpen = false;
     node.isInClosed = true;
-    this.removeFromOpenSet(node);
+    this.openSet.poll(node);
   }
 
   calcHeuristic(node_a, node_b) {
@@ -157,44 +158,45 @@ class Grid {
   }
 
   aStarStep() {
-    if (this.openSet.length > 0) {
+    if (this.openSet.size > 0) {
       // Continue
-      let current = this.getBestNode();
-      if (current === this.endNode) {
+      let current = this.openSet.peek();
+      if (current[0] === this.endNode) {
         // DONE!!!
         flash();
       } else {
-        this.addToClosedSet(current);
-      }
-      for (let neighbour of current.neighbours) {
-        // let tempG = current.g + this.calcHeuristic(neighbour, current);
-        let tempG = current.g + 1;
-        if (tempG < neighbour.g) {
-          neighbour.h = this.calcHeuristic(neighbour, this.endNode);
-          neighbour.g = tempG;
-          neighbour.f = neighbour.g + neighbour.h;
-          neighbour.cameFrom = current;
-          if (!this.openSet.includes(neighbour) && !neighbour.wall) {
-            this.addToOpenSet(neighbour);
+        this.addToClosedSet(current[0]);
+
+        for (let neighbour of current[0].neighbours) {
+          // let tempG = current.g + this.calcHeuristic(neighbour, current);
+          let tempG = current[0].g + 1;
+          if (tempG < neighbour.g) {
+            neighbour.h = this.calcHeuristic(neighbour, this.endNode);
+            neighbour.g = tempG;
+            neighbour.f = neighbour.g + neighbour.h;
+            neighbour.cameFrom = current[0];
+            if (!this.openSet.items.includes(neighbour) && !neighbour.wall) {
+              this.addToOpenSet(neighbour);
+            }
           }
         }
       }
-      this.tracePath(current);
+      this.tracePath(current[0]);
     } else {
       // Stop
       noLoop();
     }
   }
 
-  getBestNode() {
-    let bestNode = this.openSet[0]
-    for (let node of this.openSet) {
-      if (node.f < bestNode.f) {
-        bestNode = node
-      }
-    }
-    return bestNode;
-  }
+  // getBestNode() {
+  //   let bestNode = this.openSet[0]
+  //   for (let node of this.openSet) {
+  //     if (node.f < bestNode.f) {
+  //       bestNode = node
+  //     }
+  //   }
+  //   return bestNode;
+  // }
 }
 
 class Node {

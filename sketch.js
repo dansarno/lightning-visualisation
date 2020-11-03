@@ -2,8 +2,8 @@ let grid;
 let skyline;
 let showHide = false;
 let paused;
-let cols = 80;
-let rows = 60;
+let cols = 160;
+let rows = 120;
 let flashFrame = 0;
 
 function setup() {
