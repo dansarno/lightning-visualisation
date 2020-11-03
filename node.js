@@ -74,7 +74,7 @@ class Grid {
 
   initialise() {
     this.startNode.g = 0;
-    this.startNode.h = this.calcHeuristic(this.startNode);
+    this.startNode.h = this.calcHeuristic(this.startNode, this.endNode);
     this.startNode.f = this.startNode.h;
   }
 
@@ -142,8 +142,8 @@ class Grid {
     this.removeFromOpenSet(node);
   }
 
-  calcHeuristic(node) {
-    return dist(node.i, node.j, this.endNode.i, this.endNode.j);
+  calcHeuristic(node_a, node_b) {
+    return dist(node_a.i, node_a.j, node_b.i, node_b.j);
   }
 
   tracePath(node) {
@@ -167,9 +167,10 @@ class Grid {
         this.addToClosedSet(current);
       }
       for (let neighbour of current.neighbours) {
+        // let tempG = current.g + this.calcHeuristic(neighbour, current);
         let tempG = current.g + 1;
         if (tempG < neighbour.g) {
-          neighbour.h = this.calcHeuristic(neighbour);
+          neighbour.h = this.calcHeuristic(neighbour, this.endNode);
           neighbour.g = tempG;
           neighbour.f = neighbour.g + neighbour.h;
           neighbour.cameFrom = current;
