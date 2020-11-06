@@ -5,12 +5,12 @@ let paused;
 let cols = 100;
 let rows = 75;
 let flashFrame = 0;
+let prob_of_wall = 0.4;
 
 function setup() {
-  // frameRate(1);
   createCanvas(800, 800);
 
-  grid = new Grid(cols, rows, width, 600, 0.4);
+  grid = new Grid(cols, rows, width, 600, prob_of_wall);
   grid.setStartNode(floor(random(0, cols)), 0);
   grid.setEndNode(floor(random(0 + (cols * 0.2), cols - (cols * 0.2))), rows - 1);
   grid.initialise();
